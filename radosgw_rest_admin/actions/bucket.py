@@ -13,15 +13,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import argparse
 from base import RadosgwRestAdminAction
+
 
 class Bucket(RadosgwRestAdminAction):
     def add_arguments(self, subparser):
         self.parser = subparser.add_parser(name=self.name)
         self.parser.add_argument('-u', '--uid', help="User uid")
         self.parser.add_argument('--bucket', help="Bucket id")
-    
+
     def url_base(self):
         return 'admin/bucket'
 
@@ -33,20 +33,22 @@ class Bucket(RadosgwRestAdminAction):
             params.append('bucket=%s' % args.bucket)
         return params
 
+
 class BucketLink(Bucket):
     @property
     def name(self):
         return 'bucket-link'
-    
+
     def request_type(self):
         return 'put'
-    
+
+
 class BucketInfo(Bucket):
     def add_arguments(self, subparser):
         super(BucketInfo, self).add_arguments(subparser)
-        self.parser.add_argument('--stats', action='store_true', 
+        self.parser.add_argument('--stats', action='store_true',
                                  help="Show statistics")
-        
+
     def get_params(self, args):
         params = super(BucketInfo, self).get_params(args)
         if args.stats:
@@ -56,6 +58,6 @@ class BucketInfo(Bucket):
     @property
     def name(self):
         return 'bucket-info'
-    
+
     def request_type(self):
         return 'get'

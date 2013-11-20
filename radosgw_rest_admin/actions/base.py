@@ -18,11 +18,11 @@ class RadosgwRestAdminAction(object):
     def add_arguments(self, subparser):
         # Adds a subparser for the certain command
         raise NotImplementedError()
-    
+
     def request_type(self):
         # request type of the request (get, put, delete...)
         raise NotImplementedError()
-        
+
     def url_base(self):
         # The base url of the request (like admin/user)
         raise NotImplementedError()
@@ -30,4 +30,3 @@ class RadosgwRestAdminAction(object):
     def get_params(self, args):
         # returns a list of parameters for the request
         raise NotImplementedError()
- 

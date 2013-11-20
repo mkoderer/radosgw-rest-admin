@@ -16,40 +16,42 @@
 #    under the License.
 
 import argparse
-import requests
-import logging
 from awsauth import S3Auth
-import inspect
 import json
-import pprint
-import sys
+import logging
 import os
+import requests
+import sys
 from xml.dom.minidom import parseString
 
 
-action_classes = {"radosgw_rest_admin.actions.user": ["UserCreate", "UserInfo"],
-                  "radosgw_rest_admin.actions.bucket": ["BucketLink", "BucketInfo"]}
+action_classes = {"radosgw_rest_admin.actions.user": ["UserCreate",
+                                                      "UserInfo"],
+                  "radosgw_rest_admin.actions.bucket": ["BucketLink",
+                                                        "BucketInfo"]}
 action_objects = []
 
 for action in action_classes:
-    module = __import__(action, fromlist = action_classes[action])
+    module = __import__(action, fromlist=action_classes[action])
     for klass_name in action_classes[action]:
-         klass = getattr(module, klass_name)
-         action_objects.append(klass())
+        klass = getattr(module, klass_name)
+        action_objects.append(klass())
 
 logging.basicConfig(level=logging.DEBUG)
 
 parser = argparse.ArgumentParser(description='radosgw rest admin')
-parser.add_argument('-a', '--aws-key', 
+parser.add_argument('-a', '--aws-key',
                     help="aws key (optional if environment variable "
                     "S3_ACCESS_KEY_ID is set)")
 parser.add_argument('-s', '--secret-key', help="secret key (optional "
                     "if environment variable S3_SECRET_ACCESS_KEY is set)")
-parser.add_argument('-H', '--host', default='localhost' ,help="host name "
+parser.add_argument('-H', '--host', default='localhost', help="host name "
                     "(fqdn or ip; S3_HOSTNAME can be used instead)")
-parser.add_argument('-f', '--format', default='json', help="format (json or xml)")
+parser.add_argument('-f', '--format', default='json',
+                    help="format (json or xml)")
 parser.add_argument('--ssl', action='store_true', help="use ssl")
 subparsers = parser.add_subparsers(help='Sub commands', dest='command')
+
 
 def make_request(args):
     if args.ssl:
@@ -71,7 +73,6 @@ def make_request(args):
                              "&".join(params))
 
     request_func = getattr(requests, action.request_type())
-    print "url: %s auth: %s / %s" %(url, args.aws_key,args.secret_key)
     response = request_func(url, auth=S3Auth(args.aws_key,
                                              args.secret_key,
                                              args.host))

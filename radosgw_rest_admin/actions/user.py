@@ -13,20 +13,21 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import argparse
 from base import RadosgwRestAdminAction
 
+
 class User(RadosgwRestAdminAction):
+
     def add_arguments(self, subparser):
         parser = subparser.add_parser(name=self.name)
         parser.add_argument('-u', '--uid', help="User uid")
         parser.add_argument('--display-name', help="Display name")
         parser.add_argument('--subuser', help="Subuser name")
-    
+
     @property
     def request_type(self):
         raise NotImplementedError()
-        
+
     def url_base(self):
         return 'admin/user'
 
@@ -41,18 +42,20 @@ class User(RadosgwRestAdminAction):
 
         return paras
 
+
 class UserInfo(User):
     @property
     def name(self):
         return 'user-info'
-    
+
     def request_type(self):
         return 'get'
+
 
 class UserCreate(User):
     @property
     def name(self):
         return 'user-create'
-        
+
     def request_type(self):
         return 'put'
