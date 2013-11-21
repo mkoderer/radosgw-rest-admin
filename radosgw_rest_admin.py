@@ -77,7 +77,7 @@ def make_request(args):
                                              args.secret_key,
                                              args.host))
     if response.status_code >= 200 and response.status_code < 300:
-        if response.content is not None or response.content == '':
+        if response.content is not None and response.content != '':
             if args.format == 'json':
                 print(json.dumps(json.loads(response.content),
                                  sort_keys=True,
